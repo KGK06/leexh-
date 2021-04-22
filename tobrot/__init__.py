@@ -55,6 +55,7 @@ BOT_START_TIME = time.time()
 PYTDL_COMMAND_G = Config.PYTDL_COMMAND_G
 LOG_COMMAND = Config.LOG_COMMAND
 CLONE_COMMAND_G = Config.CLONE_COMMAND_G
+SP_LIT_ALGO_RITH_M = Config.SP_LIT_ALGO_RITH_M
 
 if os.path.exists("TorrentLeech-Gdrive.txt"):
 	with open("Torrentleech-Gdrive.txt", "r+") as f_d:
