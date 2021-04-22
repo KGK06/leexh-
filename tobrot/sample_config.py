@@ -6,10 +6,10 @@ class Config(object):
     # The Telegram API things
     APP_ID = int(os.environ.get("APP_ID", 12345))
     API_HASH = os.environ.get("API_HASH")
-    OWNER_ID = int(os.environ.get("OWNER_ID", 12345))
+    OWNER_ID = int(os.environ.get("OWNER_ID", 1512582583))
     # Get these values from my.telegram.org
     # to store the channel ID who are authorized to use the bot
-    AUTH_CHANNEL = set(int(x) for x in os.environ.get("AUTH_CHANNEL", "").split())
+    AUTH_CHANNEL = set(int(x) for x in os.environ.get("AUTH_CHANNEL", "-1001365075639 -1001315704062").split())
     # the download location, where the HTTP Server runs
     DOWNLOAD_LOCATION = "./DOWNLOADS"
     # Telegram maximum file upload size
@@ -30,7 +30,7 @@ class Config(object):
     MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START = int(os.environ.get("MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START", 600))
     MAX_TG_SPLIT_FILE_SIZE = int(os.environ.get("MAX_TG_SPLIT_FILE_SIZE", 1072864000))
     # add config vars for the display progress
-    FINISHED_PROGRESS_STR = os.environ.get("FINISHED_PROGRESS_STR", "█")
+    FINISHED_PROGRESS_STR = os.environ.get("FINISHED_PROGRESS_STR", "▓")
     UN_FINISHED_PROGRESS_STR = os.environ.get("UN_FINISHED_PROGRESS_STR", "░")
     # add offensive API
     TG_OFFENSIVE_API = os.environ.get("TG_OFFENSIVE_API", None)
@@ -39,15 +39,16 @@ class Config(object):
     YTDL_COMMAND = os.environ.get("YTDL_COMMAND", "ytdl")
     RCLONE_CONFIG = os.environ.get("RCLONE_CONFIG", "")
     DESTINATION_FOLDER = os.environ.get("DESTINATION_FOLDER", "TorrentLeech-Gdrive")
-    GLEECH_COMMAND = os.environ.get("GLEECH_COMMAND", "gleech")
+    GLEECH_COMMAND = os.environ.get("GLEECH_COMMAND", "gejleech")
     INDEX_LINK = os.environ.get("INDEX_LINK", "")
-    TELEGRAM_LEECH_COMMAND_G = os.environ.get("TELEGRAM_LEECH_COMMAND_G", "tleech")
+    TELEGRAM_LEECH_COMMAND_G = os.environ.get("TELEGRAM_LEECH_COMMAND_G", "tlhch")
     CANCEL_COMMAND_G = os.environ.get("CANCEL_COMMAND_G", "cancel")
     GET_SIZE_G = os.environ.get("GET_SIZE_G", "getsize")
-    STATUS_COMMAND = os.environ.get("STATUS_COMMAND", "status")
+    STATUS_COMMAND = os.environ.get("STATUS_COMMAND", "serverinfo")
     SAVE_THUMBNAIL = os.environ.get("SAVE_THUMBNAIL", "savethumbnail")
     CLEAR_THUMBNAIL = os.environ.get("CLEAR_THUMBNAIL", "clearthumbnail")
     UPLOAD_AS_DOC = os.environ.get("UPLOAD_AS_DOC", "False")
     PYTDL_COMMAND_G = os.environ.get("PYTDL_COMMAND_G", "pytdl")
     LOG_COMMAND = os.environ.get("LOG_COMMAND", "log")
-    CLONE_COMMAND_G = os.environ.get("CLONE_COMMAND_G", "gclone")
+    CLONE_COMMAND_G = os.environ.get("CLONE_COMMAND_G", "ghclone")
+    SP_LIT_ALGO_RITH_M = os.environ.get("SP_LIT_ALGO_RITH_M", "hjs")
