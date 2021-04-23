@@ -56,6 +56,9 @@ PYTDL_COMMAND_G = Config.PYTDL_COMMAND_G
 LOG_COMMAND = Config.LOG_COMMAND
 CLONE_COMMAND_G = Config.CLONE_COMMAND_G
 SP_LIT_ALGO_RITH_M = Config.SP_LIT_ALGO_RITH_M
+TOGGLE_VID = Config.TOGGLE_VID
+TOGGLE_DOC = Config.TOGGLE_DOC
+CLR_CMD = Config.CLR_CMD
 
 if os.path.exists("TorrentLeech-Gdrive.txt"):
 	with open("Torrentleech-Gdrive.txt", "r+") as f_d:
