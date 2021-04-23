@@ -4,6 +4,9 @@
 
 # the logging things
 import logging
+
+from tobrot.UserDynaConfig import UserDynaConfig
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -23,8 +26,8 @@ from tobrot import (
     MAX_MESSAGE_LENGTH,
     AUTH_CHANNEL,
     BOT_START_TIME,
-    LOGGER
-)
+    LOGGER,
+    user_specific_config)
 
 
 from tobrot.helper_funcs.admin_check import AdminCheck
@@ -164,7 +167,7 @@ async def exec_message_f(client, message):
 
 async def upload_document_f(client, message):
     imsegd = await message.reply_text(
-        "processing ..."
+        "Processing...."
     )
     if message.from_user.id in AUTH_CHANNEL:
         if " " in message.text:
@@ -243,3 +246,12 @@ async def upload_log_file(client, message):
     await message.reply_document(
         "Torrentleech-Gdrive.txt"
     )
+
+async def upload_as_doc(client, message):
+    user_specific_config[message.from_user.id]=UserDynaConfig(message.from_user.id,True)
+    await message.reply_text("**🗞 Your Files Will Be Uploaded As Document 📁**")
+
+
+async def upload_as_video(client, message):
+    user_specific_config[message.from_user.id]=UserDynaConfig(message.from_user.id,False)
+    await message.reply_text("**🗞 Your Files Will Be Uploaded As Streamable 🎞**")
