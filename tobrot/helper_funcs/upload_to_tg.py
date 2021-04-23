@@ -36,8 +36,8 @@ from tobrot import (
     DESTINATION_FOLDER,
     RCLONE_CONFIG,
     INDEX_LINK,
-    UPLOAD_AS_DOC
-)
+    UPLOAD_AS_DOC,
+    user_specific_config)
 
 from pyrogram import (
     InputMediaDocument,
@@ -79,7 +79,7 @@ async def upload_to_tg(
         new_m_esg = message
         if not message.photo:
             new_m_esg = await message.reply_text(
-                f"Found {len(directory_contents)} files <a href='tg://user?id={from_user}'>🤒</a>",
+                f"<b>Found</b> <code>{len(directory_contents)}</code✓ <b>Files <a href='tg://user?id={from_user}'>📡</a></b>",
                 quote=True
                 # reply_to_message_id=message.message_id
             )
@@ -110,7 +110,7 @@ async def upload_to_tg(
             await i_m_s_g.edit_text(
                 f"Detected File Size: {d_f_s} 😡\n"
                 f"<code>{ba_se_file_name}</code> splitted into {number_of_files} files.\n"
-                "trying to upload to Telegram, now ..."
+                "Trying to upload to Telegram, now ..."
             )
             for le_file in totlaa_sleif:
                 # recursion: will this FAIL somewhere?
@@ -231,7 +231,6 @@ async def upload_to_gdrive(file_upload, message, messa_ge, g_id):
 
 #
 
-
 async def upload_single_file(message, local_file_name, caption_str, from_user, edit_media):
     await asyncio.sleep(EDIT_SLEEP_TIME_OUT)
     sent_message = None
@@ -243,27 +242,46 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
         str(from_user) + ".jpg"
     )
     LOGGER.info(thumbnail_location)
+
+    dyna_user_config_upload_as_doc = False
+    for key in iter(user_specific_config):
+        if key == from_user:
+            dyna_user_config_upload_as_doc=user_specific_config[key].upload_as_doc
+            LOGGER.info(f'Found dyanamic config for user {from_user}')
     #
-    if UPLOAD_AS_DOC.upper() == 'TRUE':
-        thumb = None
+    if UPLOAD_AS_DOC.upper() == 'TRUE' or dyna_user_config_upload_as_doc:
         thumb_image_path = None
-        if os.path.exists(thumbnail_location):
-        	thumb_image_path = await copy_file(thumbnail_location, os.path.dirname(os.path.abspath(local_file_name)))
-        	thumb = thumb_image_path
+        if thumbnail_location is not None and os.path.exists(thumbnail_location):
+            thumb_image_path = await copy_file(
+                thumbnail_location,
+                os.path.dirname(os.path.abspath(local_file_name))
+            )
+        if thumb_image_path is not None and os.path.exists(thumb_image_path):
+            Image.open(thumb_image_path).convert(
+                "RGB"
+            ).save(thumb_image_path)
+            img = Image.open(thumb_image_path)
+            # https://stackoverflow.com/a/37631799/4723940
+            img.resize((32, 32))
+            img.save(thumb_image_path, "JPEG")
+        thumb = None
+        if thumb_image_path is not None and os.path.isfile(thumb_image_path):
+            thumb = thumb_image_path
         message_for_progress_display = message
         if not edit_media:
-            message_for_progress_display = await message.reply_text("starting upload of {}".format(os.path.basename(local_file_name)))
+            message_for_progress_display = await message.reply_text(
+                "<b>Starting Upload 📤</b>\n\n<b>File Name :</b> <code>{}</code>".format(os.path.basename(local_file_name)))
         sent_message = await message.reply_document(
             document=local_file_name,
-    	    # quote=True,
+            # quote=True,
             thumb=thumb,
             caption=caption_str,
             parse_mode="html",
             disable_notification=True,
-    	    #reply_to_message_id=message.reply_to_message.message_id,
+            # reply_to_message_id=message.reply_to_message.message_id,
             progress=progress_for_pyrogram,
             progress_args=(
-                "trying to upload",
+                "<b>Trying To Upload....📤</b>",
                 message_for_progress_display,
                 start_time
             )
@@ -271,8 +289,6 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
         if message.message_id != message_for_progress_display.message_id:
             await message_for_progress_display.delete()
         os.remove(local_file_name)
-        if thumb is not None:
-        	os.remove(thumb)
     else:
         try:
             message_for_progress_display = message
@@ -284,7 +300,7 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                 metadata = extractMetadata(createParser(local_file_name))
                 duration = 0
                 if metadata.has("duration"):
-                	duration = metadata.get('duration').seconds
+                    duration = metadata.get('duration').seconds
                 width = 0
                 height = 0
                 thumb_image_path = None
@@ -294,28 +310,29 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                         os.path.dirname(os.path.abspath(local_file_name))
                     )
                 else:
+                    LOGGER.info("Taking Screenshot")
                     thumb_image_path = await take_screen_shot(
                         local_file_name,
                         os.path.dirname(os.path.abspath(local_file_name)),
-                        (duration / 2)
+                        math.floor(duration / 2)
                     )
                     # get the correct width, height, and duration for videos greater than 10MB
-                    if os.path.exists(thumb_image_path):
-                        metadata = extractMetadata(createParser(thumb_image_path))
-                        if metadata.has("width"):
-                            width = metadata.get("width")
-                        if metadata.has("height"):
-                            height = metadata.get("height")
-                        # ref: https://t.me/PyrogramChat/44663
-                        # https://stackoverflow.com/a/21669827/4723940
-                        Image.open(thumb_image_path).convert(
-                            "RGB"
-                        ).save(thumb_image_path)
-                        img = Image.open(thumb_image_path)
-                        # https://stackoverflow.com/a/37631799/4723940
-                        img.resize((320, height))
-                        img.save(thumb_image_path, "JPEG")
-                        # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
+                if thumb_image_path is not None and os.path.isfile(thumb_image_path):
+                    metadata = extractMetadata(createParser(thumb_image_path))
+                    if metadata.has("width"):
+                        width = metadata.get("width")
+                    if metadata.has("height"):
+                        height = metadata.get("height")
+                    # ref: https://t.me/PyrogramChat/44663
+                    # https://stackoverflow.com/a/21669827/4723940
+                    Image.open(thumb_image_path).convert(
+                        "RGB"
+                    ).save(thumb_image_path)
+                    img = Image.open(thumb_image_path)
+                    # https://stackoverflow.com/a/37631799/4723940
+                    img.resize((320, height))
+                    img.save(thumb_image_path, "JPEG")
+                    # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
                 #
                 thumb = None
                 if thumb_image_path is not None and os.path.isfile(thumb_image_path):
@@ -337,7 +354,7 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                         # quote=True,
                     )
                 else:
-                	sent_message = await message.reply_video(
+                    sent_message = await message.reply_video(
                         video=local_file_name,
                         # quote=True,
                         caption=caption_str,
@@ -348,10 +365,10 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                         thumb=thumb,
                         supports_streaming=True,
                         disable_notification=True,
-                        #reply_to_message_id=message.reply_to_message.message_id,
+                        # reply_to_message_id=message.reply_to_message.message_id,
                         progress=progress_for_pyrogram,
                         progress_args=(
-                            "trying to upload",
+                            "<b>Trying To Upload....📤</b>",
                             message_for_progress_display,
                             start_time
                         )
@@ -364,7 +381,7 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                 title = ""
                 artist = ""
                 if metadata.has("duration"):
-                	duration = metadata.get('duration').seconds
+                    duration = metadata.get('duration').seconds
                 if metadata.has("title"):
                     title = metadata.get("title")
                 if metadata.has("artist"):
@@ -378,7 +395,7 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                 thumb = None
                 if thumb_image_path is not None and os.path.isfile(thumb_image_path):
                     thumb = thumb_image_path
-                 # send audio
+                # send audio
                 if edit_media and message.photo:
                     await asyncio.sleep(EDIT_SLEEP_TIME_OUT)
                     sent_message = await message.edit_media(
@@ -404,10 +421,10 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                         title=title,
                         thumb=thumb,
                         disable_notification=True,
-                        #reply_to_message_id=message.reply_to_message.message_id,
+                        # reply_to_message_id=message.reply_to_message.message_id,
                         progress=progress_for_pyrogram,
                         progress_args=(
-                            "trying to upload",
+                            "<b>Trying To Upload....📤</b>",
                             message_for_progress_display,
                             start_time
                         )
@@ -429,7 +446,7 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                 #
                 # send document
                 if edit_media and message.photo:
-                	sent_message = await message.edit_media(
+                    sent_message = await message.edit_media(
                         media=InputMediaDocument(
                             media=local_file_name,
                             thumb=thumb,
@@ -446,10 +463,10 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                         caption=caption_str,
                         parse_mode="html",
                         disable_notification=True,
-                        #reply_to_message_id=message.reply_to_message.message_id,
+                        # reply_to_message_id=message.reply_to_message.message_id,
                         progress=progress_for_pyrogram,
                         progress_args=(
-                            "trying to upload",
+                            "<b>Trying To Upload....📤</b>",
                             message_for_progress_display,
                             start_time
                         )
@@ -458,6 +475,7 @@ async def upload_single_file(message, local_file_name, caption_str, from_user, e
                     os.remove(thumb)
         except Exception as e:
             await message_for_progress_display.edit_text("**FAILED**\n" + str(e))
+            LOGGER.exception(e)
         else:
             if message.message_id != message_for_progress_display.message_id:
                 await message_for_progress_display.delete()
