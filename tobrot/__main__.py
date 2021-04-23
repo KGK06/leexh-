@@ -33,7 +33,10 @@ from tobrot import (
     SAVE_THUMBNAIL,
     CLEAR_THUMBNAIL,
     PYTDL_COMMAND_G,
-    LOG_COMMAND
+    LOG_COMMAND,
+    TOGGLE_VID,
+    TOGGLE_DOC,
+    CLR_CMD
 )
 
 from pyrogram import Client, Filters, MessageHandler, CallbackQueryHandler
@@ -46,7 +49,9 @@ from tobrot.plugins.status_message_fn import (
     cancel_message_f,
     exec_message_f,
     upload_document_f,
-    upload_log_file
+    upload_log_file,
+    upload_as_doc,
+    upload_as_video
 )
 from tobrot.plugins.call_back_button_handler import button
 from tobrot.plugins.custom_thumbnail import (
@@ -89,7 +94,7 @@ if __name__ == "__main__" :
     #
     incoming_purge_message_handler = MessageHandler(
         incoming_purge_message_f,
-        filters=Filters.command(["purge"]) & Filters.chat(chats=AUTH_CHANNEL)
+        filters=Filters.command(["fudje"]) & Filters.chat(chats=AUTH_CHANNEL)
     )
     app.add_handler(incoming_purge_message_handler)
     #
@@ -101,7 +106,7 @@ if __name__ == "__main__" :
     #
     incoming_g_clear_handler = MessageHandler(
         g_clearme,
-        filters=Filters.command(["renewme"]) & Filters.chat(chats=AUTH_CHANNEL)
+        filters=Filters.command([f"{CLR_CMD}"]) & Filters.chat(chats=AUTH_CHANNEL)
     )
     app.add_handler(incoming_g_clear_handler)
     #
@@ -143,15 +148,17 @@ if __name__ == "__main__" :
     app.add_handler(eval_message_handler)
     '''
     #
+    '''
     rename_message_handler = MessageHandler(
         rename_message_f,
         filters=Filters.command(["rename"]) & Filters.chat(chats=AUTH_CHANNEL)
     )
     app.add_handler(rename_message_handler)
+    '''
     #
     upload_document_handler = MessageHandler(
         upload_document_f,
-        filters=Filters.command(["upload"]) & Filters.chat(chats=AUTH_CHANNEL)
+        filters=Filters.command(["uplo"]) & Filters.chat(chats=AUTH_CHANNEL)
     )
     app.add_handler(upload_document_handler)
     #
@@ -195,5 +202,17 @@ if __name__ == "__main__" :
         filters=Filters.command([f"{CLEAR_THUMBNAIL}"]) & Filters.chat(chats=AUTH_CHANNEL)
     )
     app.add_handler(clear_thumb_nail_handler)
+    #
+    upload_as_doc_handler = MessageHandler(
+        upload_as_doc,
+        filters=Filters.command([f"{TOGGLE_DOC}]") & Filters.chat(chats=AUTH_CHANNEL)
+    )
+    app.add_handler(upload_as_doc_handler)
+    #
+    upload_as_video_handler = MessageHandler(
+        upload_as_video,
+        filters=Filters.command([f"{TOGGLE_VID}"]) & Filters.chat(chats=AUTH_CHANNEL)
+    )
+    app.add_handler(upload_as_video_handler)
     #
     app.run()
