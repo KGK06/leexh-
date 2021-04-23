@@ -52,3 +52,7 @@ class Config(object):
     LOG_COMMAND = os.environ.get("LOG_COMMAND", "log")
     CLONE_COMMAND_G = os.environ.get("CLONE_COMMAND_G", "ghclone")
     SP_LIT_ALGO_RITH_M = os.environ.get("SP_LIT_ALGO_RITH_M", "hjs")
+    TOGGLE_VID = os.environ.get("TOGGLE_VID", "toggleasvideo")
+    TOGGLE_DOC = os.environ.get("TOGGLE_DOC", "toggleasdoc")
+    CLR_CMD = os.environ.get("CLR_CMD", "clrcmd")
+                                
