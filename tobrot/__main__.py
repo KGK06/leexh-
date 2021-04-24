@@ -170,7 +170,7 @@ if __name__ == "__main__" :
     #
     help_text_handler = MessageHandler(
         help_message_f,
-        filters=Filters.command(["help"]) & Filters.chat(chats=AUTH_CHANNEL)
+        filters=Filters.command([f"{HLP_CMD}"]) & Filters.chat(chats=AUTH_CHANNEL)
     )
     app.add_handler(help_text_handler)
     #
@@ -205,7 +205,7 @@ if __name__ == "__main__" :
     #
     upload_as_doc_handler = MessageHandler(
         upload_as_doc,
-        filters=Filters.command([f"{TOGGLE_DOC}]") & Filters.chat(chats=AUTH_CHANNEL)
+        filters=Filters.command([f"{TOGGLE_DOC}"]) & Filters.chat(chats=AUTH_CHANNEL)
     )
     app.add_handler(upload_as_doc_handler)
     #
