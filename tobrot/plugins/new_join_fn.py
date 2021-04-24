@@ -41,18 +41,18 @@ async def help_message_f(client, message):
     await message.reply_text(""" """, disable_web_page_preview=True)
 
 
-async def rename_message_f(client, message):
-  inline_keyboard = []
-    inline_keyboard.append([
-        pyrogram.InlineKeyboardButton(
-            text="👉🏻 Click Here 👈🏻",
-            url="https://t.me/MeGBots/2"
-        )
-    ])
-    reply_markup = pyrogram.InlineKeyboardMarkup(inline_keyboard)
-    await message.reply_text(
-        "<b>Hey Dude !!!</b>\n<b>📡 Need Bot To Renamer Bot..???</b>\n\n<b>😌 Then Click On Below Button To See it</b>",
-        quote=True,
-        parse_mode="html",
-        reply_markup=reply_markup
-    )
+#async def rename_message_f(client, message):
+#  inline_keyboard = []
+#    inline_keyboard.append([
+#        pyrogram.InlineKeyboardButton(
+#            text="👉🏻 Click Here 👈🏻",
+#            url="https://t.me/MeGBots/2"
+#        )
+#    ])
+#    reply_markup = pyrogram.InlineKeyboardMarkup(inline_keyboard)
+#    await message.reply_text(
+#        "<b>Hey Dude !!!</b>\n<b>📡 Need Bot To Renamer Bot..???</b>\n\n<b>😌 Then Click On Below Button To See it</b>",
+#        quote=True,
+#        parse_mode="html",
+#        reply_markup=reply_markup
+#    )
