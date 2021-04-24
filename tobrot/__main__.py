@@ -36,7 +36,8 @@ from tobrot import (
     LOG_COMMAND,
     TOGGLE_VID,
     TOGGLE_DOC,
-    CLR_CMD
+    CLR_CMD,
+    HLP_CMD
 )
 
 from pyrogram import Client, Filters, MessageHandler, CallbackQueryHandler
