@@ -59,6 +59,7 @@ SP_LIT_ALGO_RITH_M = Config.SP_LIT_ALGO_RITH_M
 TOGGLE_VID = Config.TOGGLE_VID
 TOGGLE_DOC = Config.TOGGLE_DOC
 CLR_CMD = Config.CLR_CMD
+HLP_CMD = Config.HLP_CMD
 
 if os.path.exists("TorrentLeech-Gdrive.txt"):
 	with open("Torrentleech-Gdrive.txt", "r+") as f_d:
