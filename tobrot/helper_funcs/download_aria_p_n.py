@@ -458,7 +458,7 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
 
                 msg += f"\n<b>├ Status : {file.status}</b>"
                 msg += f"\n<b>├ ETA : {file.eta_string()}</b>"
-                msg += f"<b>│</b>\n<b>╰── ⌊ 🌟 @TeluguMoviesDL 🌟 ⌉</b>"
+                msg += f"\n<b>│</b>\n<b>╰── ⌊ 🌟 @TeluguMoviesDL 🌟 ⌉</b>"
                 inline_keyboard = []
                 ikeyboard = []
                 ikeyboard.append(InlineKeyboardButton("✘ Cancel ✘", callback_data=(f"cancel {gid}").encode("UTF-8")))
