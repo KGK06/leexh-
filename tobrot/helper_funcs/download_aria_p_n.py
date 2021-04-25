@@ -235,16 +235,16 @@ async def call_apropriate_function(
             message_id = final_response[key_f_res_se]
             channel_id = str(sent_message_to_update_tg_p.chat.id)[4:]
             private_link = f"https://t.me/c/{channel_id}/{message_id}"
-            message_to_send += "📂 <a href='"
+            message_to_send += "➠ <a href='"
             message_to_send += private_link
             message_to_send += "'>"
             message_to_send += local_file_name
             message_to_send += "</a>"
             message_to_send += "\n"
         if message_to_send != "":
-            mention_req_user = f"<a href='tg://user?id={user_id}'>Your Requested Files</a>\n\n"
+            mention_req_user = f"<a href='tg://user?id={user_id}'>📁 Your Requested Files</a>\n\n"
             message_to_send = mention_req_user + message_to_send
-            message_to_send = message_to_send + "\n\n" + "#uploads ©️ @FIMYFLX"
+            message_to_send = message_to_send + "\n\n" + "#UPLOADS\n\n💫 Powered By : @TeluguMoviesDL"
         else:
             message_to_send = "<i>FAILED</i> to upload files. 😞😞"
         await user_message.reply_text(
@@ -447,21 +447,21 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                 except:
                     pass
                 #
-                msg = f"\n<b>Downloading :</b>『{file.progress_string()} 』    `{downloading_dir_name}`"
-                msg += f"\n<b>Speed</b>: {file.download_speed_string()} 🔽 / {file.upload_speed_string()} 🔼"
-                msg += f"\n<b>Total Size</b>: {file.total_length_string()}"
+                msg = f"<b>╭──────── ⌊  📥  Downloading  ⌉ </b>\n<b>│</b>\n<b>├ {file.progress_string()}</b>\n<b>│</b>\n<b>├ Name  :</b> <code>{downloading_dir_name}</code>"
+                msg += f"\n<b>├ Speed :  {file.download_speed_string()} 🔽 || {file.upload_speed_string()}🔼</b>"
+                msg += f"\n<b>├ Total Size :  {file.total_length_string()}</b>"
 
                 if is_file is None :
-                   msg += f"\n<b>Connections :</b> {file.connections}"
+                   msg += f"\n<b>├ Connections :  {file.connections}</b>"
                 else :
-                   msg += f"\n<b>Info:</b>[ P : ,<code>{file.connections} || S : {file.num_seeders} ]</code>"
+                   msg += f"\n<b>├ Info : [ P :- {file.connections} || S : {file.num_seeders} ]</b>"
 
-                msg += f"\n<b>Status:</b> {file.status}"
-                msg += f"\n<b>Time Left :</b> {file.eta_string()}"
-                msg += f"\n© @FILMYFLX | @THUGLIFEBOTS"
+                msg += f"\n<b>├ Status : {file.status}</b>"
+                msg += f"\n<b>├ ETA : {file.eta_string()}</b>"
+                msg += f"<b>│</b>\n<b>╰── ⌊ 🌟 @TeluguMoviesDL 🌟 ⌉</b>"
                 inline_keyboard = []
                 ikeyboard = []
-                ikeyboard.append(InlineKeyboardButton("❌ Cancel ❌", callback_data=(f"cancel {gid}").encode("UTF-8")))
+                ikeyboard.append(InlineKeyboardButton("✘ Cancel ✘", callback_data=(f"cancel {gid}").encode("UTF-8")))
                 inline_keyboard.append(ikeyboard)
                 reply_markup = InlineKeyboardMarkup(inline_keyboard)
                 #msg += reply_markup
@@ -478,7 +478,7 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
             await check_progress_for_dl(aria2, gid, event, previous_message)
         else:
             await asyncio.sleep(EDIT_SLEEP_TIME_OUT)
-            await event.edit(f"Downloaded Successfully: `{file.name}` 🤒")
+            await event.edit(f"<b>File Downloaded Successfully ✅</b>\n\n<b>File Name :</b> `{file.name}` 🤒")
             return True
     except aria2p.client.ClientException:
         pass
