@@ -13,14 +13,14 @@ logging.basicConfig(
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 LOGGER = logging.getLogger(__name__)
 
+import pyprog
+import psutil
 import aria2p
 import asyncio
 import os
 from tobrot.helper_funcs.upload_to_tg import upload_to_tg, upload_to_gdrive
 from tobrot.helper_funcs.create_compressed_archive import create_archive, unzip_me, unrar_me, untar_me
 from tobrot.helper_funcs.extract_link_from_message import extract_link
-
-#from pyprog import pyprog
 
 from tobrot import (
     ARIA_TWO_STARTED_PORT,
@@ -447,39 +447,38 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                     downloading_dir_name = str(file.name)
                 except:
                     pass
-                #
-                #prog = pyprog.ProgressBar(" ", " ", total=100, bar_length=15, complete_symbol="●", not_complete_symbol="○", wrap_bar_prefix=" 〖", wrap_bar_suffix="〗 ", progress_explain="", progress_loc=pyprog.ProgressBar.PROGRESS_LOC_END)
-#                prog = ProgressBar(" ", " ", total=100, bar_length=15, complete_symbol="●", not_complete_symbol="○", wrap_bar_prefix=" 〖", wrap_bar_suffix="〗 ", progress_explain="", progress_loc=pyprog.ProgressBar.PROGRESS_LOC_END)
+                
+                prog = pyprog.ProgressBar(" ", " ", total=100, bar_length=15, complete_symbol="●", not_complete_symbol="○", wrap_bar_prefix=" 〖", wrap_bar_suffix="〗 ", progress_explain="", progress_loc=pyprog.ProgressBar.PROGRESS_LOC_END)
 		
-#                old_stdout = sys.stdout
-#                new_stdout = io.StringIO()
-#                sys.stdout = new_stdout
-#                
-#                p = file.progress_string()
-#                l = len(p)
-#                p=p[0:l-1]
-#                a = float(p)
-#                
-#                prog.set_stat(a)
-#                prog.update()
-#                output = new_stdout.getvalue()
-#                sys.stdout = old_stdout
-#                prg = output[3:len(output)]
-#                i = 0
-#                i = int(i)
-#                STR = int(os.environ.get("STR", 30))
-#                msg = f"𝘿𝙤𝙬𝙣𝙡𝙤𝙖𝙙𝙞𝙣𝙜</b>\n"
-#                msg += f"\n┣<b>𝙁𝙞𝙡𝙚𝙣𝙖𝙢𝙚</b> : "
-#                while(len(downloading_dir_name)>0):
-#                    st = downloading_dir_name[0:STR]
-#                    if(i==0):
-#                        msg += f"{downloading_dir_name[0:STR-15]}"
-#                        downloading_dir_name = downloading_dir_name[STR-15:len(downloading_dir_name)]
-#                        i = 1
-#                    else:
-#                        msg += f"\n┃{st}"
-#                        downloading_dir_name = downloading_dir_name[STR:len(downloading_dir_name)]
-                msg += f"<b>╭──────── ⌊  📥  Downloading  ⌉ </b>\n<b>│</b>\n<b>├ Downloaded : {file.progress_string()}</b>\n<b>│</b>\n<b>├ Name  :</b> <code>{downloading_dir_name}</code>"
+                old_stdout = sys.stdout
+                new_stdout = io.StringIO()
+                sys.stdout = new_stdout
+                
+                p = file.progress_string()
+                l = len(p)
+                p=p[0:l-1]
+                a = float(p)
+                
+                prog.set_stat(a)
+                prog.update()
+                output = new_stdout.getvalue()
+                sys.stdout = old_stdout
+                prg = output[3:len(output)]
+                i = 0
+                i = int(i)
+                STR = int(os.environ.get("STR", 30))
+                msg = f"Downloading....📥</b>\n"
+                msg += f"\n┣<b>File Name </b> : "
+                while(len(downloading_dir_name)>0):
+                    st = downloading_dir_name[0:STR]
+                    if(i==0):
+                        msg += f"{downloading_dir_name[0:STR-15]}"
+                        downloading_dir_name = downloading_dir_name[STR-15:len(downloading_dir_name)]
+                        i = 1
+                    else:
+                        msg += f"\n┃{st}"
+                        downloading_dir_name = downloading_dir_name[STR:len(downloading_dir_name)]
+#                msg += f"<b>╭──────── ⌊  📥  Downloading  ⌉ </b>\n<b>│</b>\n<b>├ Downloaded : {file.progress_string()}</b>\n<b>│</b>\n<b>├ Name  :</b> <code>{downloading_dir_name}</code>"
                 msg += f"\n<b>├ Speed :  {file.download_speed_string()} </b>"
                 msg += f"\n<b>├ Total Size :  {file.total_length_string()}</b>"
 
