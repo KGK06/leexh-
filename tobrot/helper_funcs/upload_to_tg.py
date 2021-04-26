@@ -20,6 +20,8 @@ import re
 from hurry.filesize import size
 import requests
 import shutil
+import math
+import io
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
