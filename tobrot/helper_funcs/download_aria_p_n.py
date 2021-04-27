@@ -28,8 +28,8 @@ from tobrot import (
     AUTH_CHANNEL,
     DOWNLOAD_LOCATION,
     EDIT_SLEEP_TIME_OUT,
-    CUSTOM_FILE_NAME,
-    STRIP_FILE_NAMES
+    CUSTOM_FILE_NAME
+#    STRIP_FILE_NAMES
 )
 from pyrogram import (
 	InlineKeyboardButton,
