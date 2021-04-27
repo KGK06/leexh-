@@ -4,8 +4,6 @@
 
 # the logging things
 import logging
-import sys
-sys.setrecursionlimit(10**4)
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -13,14 +11,13 @@ logging.basicConfig(
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 LOGGER = logging.getLogger(__name__)
 
-import math
-
-import pyprog
-import psutil
 import aria2p
 import asyncio
 import os
 import io
+import sys
+import pyprog
+import psutil
 from tobrot.helper_funcs.upload_to_tg import upload_to_tg, upload_to_gdrive
 from tobrot.helper_funcs.create_compressed_archive import create_archive, unzip_me, unrar_me, untar_me
 from tobrot.helper_funcs.extract_link_from_message import extract_link
@@ -31,15 +28,14 @@ from tobrot import (
     AUTH_CHANNEL,
     DOWNLOAD_LOCATION,
     EDIT_SLEEP_TIME_OUT,
-    CUSTOM_FILE_NAME
+    CUSTOM_FILE_NAME,
+    STRIP_FILE_NAMES
 )
-from pyrogram.errors import MessageNotModified
 from pyrogram import (
 	InlineKeyboardButton,
 	InlineKeyboardMarkup,
 	Message
 )
-
 async def aria_start():
     aria2_daemon_start_cmd = []
     # start the daemon, aria2c command
@@ -58,9 +54,8 @@ async def aria_start():
     aria2_daemon_start_cmd.append("--rpc-max-request-size=1024M")
     aria2_daemon_start_cmd.append("--seed-ratio=0.0")
     aria2_daemon_start_cmd.append("--seed-time=1")
-    aria2_daemon_start_cmd.append("--max-overall-upload-limit=1K")
     aria2_daemon_start_cmd.append("--split=10")
-    aria2_daemon_start_cmd.append(f"--bt-stop-timeout={MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START}")
+    #aria2_daemon_start_cmd.append(f"--bt-stop-timeout={MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START}")
     #
     LOGGER.info(aria2_daemon_start_cmd)
     #
@@ -214,6 +209,13 @@ async def call_apropriate_function(
             to_upload_file = f"{CUSTOM_FILE_NAME}{to_upload_file}"
         else:
             to_upload_file = to_upload_file
+            
+    if STRIP_FILE_NAMES:
+        striped_file_name = f"{to_upload_file}"
+        for fname in STRIP_FILE_NAMES.split("|"):
+            striped_file_name=striped_file_name.replace(fname,"").strip()
+        os.rename(to_upload_file, striped_file_name)
+        to_upload_file = striped_file_name
 
     if cstom_file_name:
         os.rename(to_upload_file, cstom_file_name)
@@ -240,16 +242,16 @@ async def call_apropriate_function(
             message_id = final_response[key_f_res_se]
             channel_id = str(sent_message_to_update_tg_p.chat.id)[4:]
             private_link = f"https://t.me/c/{channel_id}/{message_id}"
-            message_to_send += "➠ <a href='"
+            message_to_send += "👉 <a href='"
             message_to_send += private_link
             message_to_send += "'>"
             message_to_send += local_file_name
             message_to_send += "</a>"
             message_to_send += "\n"
         if message_to_send != "":
-            mention_req_user = f"<a href='tg://user?id={user_id}'>📁 Your Requested Files</a>\n\n"
+            mention_req_user = f"<a href='tg://user?id={user_id}'>Your Requested Files</a>\n\n"
             message_to_send = mention_req_user + message_to_send
-            message_to_send = message_to_send + "\n\n" + "#UPLOADS\n\n💫 Powered By : @TeluguMoviesDL"
+            message_to_send = message_to_send + "\n\n" + "#uploads"
         else:
             message_to_send = "<i>FAILED</i> to upload files. 😞😞"
         await user_message.reply_text(
@@ -356,6 +358,7 @@ async def call_apropriate_function_g(
             user_message,
             user_id
         )
+    return to_upload_file
 #
 async def call_apropriate_function_t(
     to_upload_file_g,
@@ -450,9 +453,9 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                     downloading_dir_name = str(file.name)
                 except:
                     pass
-                
+                #
                 prog = pyprog.ProgressBar(" ", " ", total=100, bar_length=15, complete_symbol="●", not_complete_symbol="○", wrap_bar_prefix=" 〖", wrap_bar_suffix="〗 ", progress_explain="", progress_loc=pyprog.ProgressBar.PROGRESS_LOC_END)
-		
+                
                 old_stdout = sys.stdout
                 new_stdout = io.StringIO()
                 sys.stdout = new_stdout
@@ -479,7 +482,7 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                         downloading_dir_name = downloading_dir_name[STR-15:len(downloading_dir_name)]
                         i = 1
                     else:
-                        msg += f"\n│{st}"
+                        msg += f"\n┃{st}"
                         downloading_dir_name = downloading_dir_name[STR:len(downloading_dir_name)]
 #                msg += f"<b>╭──────── ⌊  📥  Downloading  ⌉ </b>\n<b>│</b>\n<b>├ Downloaded : {file.progress_string()}</b>\n<b>│</b>\n<b>├ Name  :</b> <code>{downloading_dir_name}</code>"
                 msg += f"\n<b>┝ Speed :  {file.download_speed_string()} </b>"
@@ -512,30 +515,21 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
             await check_progress_for_dl(aria2, gid, event, previous_message)
         else:
             await asyncio.sleep(EDIT_SLEEP_TIME_OUT)
-            await event.edit(f"<b>File Downloaded Successfully ✅</b>\n\n<b>File Name :</b> `{file.name}` 🤒")
+            await event.edit(f"File Downloaded Successfully: `{file.name}`")
             return True
-    except aria2p.client.ClientException:
-        pass
-    except MessageNotModified:
-        pass
-    except RecursionError:
-        file.remove(force=True)
-        await event.edit(
-            "Download Auto Canceled :\n\n"
-            "Your Torrent/Link is Dead.".format(
-                file.name
-            )
-        )
-        return False
     except Exception as e:
         LOGGER.info(str(e))
         if " not found" in str(e) or "'file'" in str(e):
-            await event.edit("Download Canceled :\n<code>{}</code>".format(file.name))
+            await event.edit("Download Canceled")
+            return False
+        elif " depth exceeded" in str(e):
+            file.remove(force=True)
+            await event.edit("Download Auto Canceled\nYour Torrent/Link is Dead.")
             return False
         else:
             LOGGER.info(str(e))
-            await event.edit("<u>error</u> :\n<code>{}</code> \n\n#error".format(str(e)))
-            return False
+            await event.edit("<u>error</u> :\n`{}` \n\n#error".format(str(e)))
+            return
 # https://github.com/jaskaranSM/UniBorg/blob/6d35cf452bce1204613929d4da7530058785b6b1/stdplugins/aria.py#L136-L164
 
 
