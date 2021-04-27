@@ -470,8 +470,8 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                 i = 0
                 i = int(i)
                 STR = int(os.environ.get("STR", 30))
-                msg = f"Downloading....📥</b>\n"
-                msg += f"\n┣<b>File Name </b> : "
+                msg = f"<b>╭──────── ⌊  📥  Downloading  ⌉ /b>\n<b>│</b>\n<b>├ {prog} {file.progress_string()}</b>"
+                msg += f"\n<b>┝ File Name </b> : "
                 while(len(downloading_dir_name)>0):
                     st = downloading_dir_name[0:STR]
                     if(i==0):
@@ -479,19 +479,19 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                         downloading_dir_name = downloading_dir_name[STR-15:len(downloading_dir_name)]
                         i = 1
                     else:
-                        msg += f"\n┃{st}"
+                        msg += f"\n│{st}"
                         downloading_dir_name = downloading_dir_name[STR:len(downloading_dir_name)]
 #                msg += f"<b>╭──────── ⌊  📥  Downloading  ⌉ </b>\n<b>│</b>\n<b>├ Downloaded : {file.progress_string()}</b>\n<b>│</b>\n<b>├ Name  :</b> <code>{downloading_dir_name}</code>"
-                msg += f"\n<b>├ Speed :  {file.download_speed_string()} </b>"
-                msg += f"\n<b>├ Total Size :  {file.total_length_string()}</b>"
+                msg += f"\n<b>┝ Speed :  {file.download_speed_string()} </b>"
+                msg += f"\n<b>┝ Total Size :  {file.total_length_string()}</b>"
 
                 if is_file is None :
-                   msg += f"\n<b>├ Connections :  {file.connections}</b>"
+                   msg += f"\n<b>┝ Connections :  {file.connections}</b>"
                 else :
-                   msg += f"\n<b>├ Info : [ P :- {file.connections} || S : {file.num_seeders} ]</b>"
+                   msg += f"\n<b>┝ Info : [ P :- {file.connections} || S : {file.num_seeders} ]</b>"
 
-                msg += f"\n<b>├ Status : {file.status}</b>"
-                msg += f"\n<b>├ ETA : {file.eta_string()}</b>"
+                msg += f"\n<b>┝ Status : {file.status}</b>"
+                msg += f"\n<b>┝ ETA : {file.eta_string()}</b>"
                 msg += f"\n<b>│</b>\n<b>╰── ⌊ 🌟 @TeluguMoviesDL 🌟 ⌉</b>"
                 inline_keyboard = []
                 ikeyboard = []
