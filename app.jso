@@ -4,9 +4,9 @@
   "keywords": [
     "telegram"
   ],
-  "repository": "https://github.com/gautamajay52/TorrentLeech-Gdrive",
-  "success_url": "https://t.me/torrentleechgdrivesupport",
-  "website": "https://github.com/gautamajay52/TorrentLeech-Gdrive",
+  "repository": "https://github.com/KGK06/leexh-",
+  "success_url": "https://telegram.dog/MeGLeech",
+  "website": "https://github.com/KGK06/leexh-",
   "env": {
     "ENV": {
       "description": "Setting this to ANYTHING will enable webhooks when in env mode",
@@ -34,6 +34,14 @@
     },
     "UPLOAD_AS_DOC": {
       "description": "True/False. If true all files will be uploaded as documents. Default is False.",
+      "required": false
+    },
+    "TOGGLE_DOC": {
+      "description": "Enter Your Cusrom Toggle As Doc Command (Read Readme.md for more)",
+      "required": false
+    },
+    "TOGGLE_VID": {
+      "description": "Enter Your Cusrom Toggle As Vid Command (Read Readme.md for more)",
       "required": false
     },
     "CHUNK_SIZE": {
