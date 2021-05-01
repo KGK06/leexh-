@@ -38,7 +38,7 @@ async def help_message_f(client, message):
     #message_id = 99
     # display the /help
     
-    await message.reply_text(""" """, disable_web_page_preview=True)
+    await message.reply_text("""<b>Hello 👾 !</b>\n<b>This Is A Telegram Leech Bot 🧲</b>\n<b>Click Below To Know How To Use Me 📄</b>\n\n<b> Developer 👨🏻‍💻 : @MeGBots</b>""", disable_web_page_preview=True)
 
 
 #async def rename_message_f(client, message):
